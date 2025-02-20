@@ -24,7 +24,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${poppins.variable} ${nunito.variable}`}>
-        {/* Wrap everything inside LanguageProvider */}
         <LanguageProvider>
           <ThemeRegistry>{children}</ThemeRegistry>
         </LanguageProvider>
