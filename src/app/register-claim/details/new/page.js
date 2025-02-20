@@ -156,7 +156,7 @@ export default function SubmitClaim() {
             bottom: 0,
             width: "100%",
             height: { xs: "35%", sm: "40%" },
-            backgroundImage: "url('/insurance-man.png')",
+            backgroundImage: "url('/insurance-man.PNG')",
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "bottom",
@@ -319,11 +319,11 @@ export default function SubmitClaim() {
               {[
                 {
                   title: translations[language].accidentSketch,
-                  image: "/RegClaim/sketchAccident.png",
+                  image: "/sketchAccident.PNG",
                 },
                 {
                   title: translations[language].damageSketch,
-                  image: "/RegClaim/sketchDamage.png",
+                  image: "/sketchDamage.PNG",
                 },
               ].map((item, index) => (
                 <Box key={index} sx={{ mt: 2, textAlign: "center" }}>
@@ -357,7 +357,7 @@ export default function SubmitClaim() {
                       }}
                     >
                       <Image
-                        src="/RegClaim/upload.png"
+                        src="/upload.PNG"
                         width={20}
                         height={20}
                         alt="Upload"
@@ -595,8 +595,8 @@ export default function SubmitClaim() {
                 <Image
                   src={
                     uploadedImages.mulkiyaFront
-                      ? "/RegClaim/Mulkiya.png"
-                      : "/RegClaim/upload.png"
+                      ? "/Mulkiya.PNG"
+                      : "/upload.PNG"
                   }
                   width={250}
                   height={150}
@@ -635,8 +635,8 @@ export default function SubmitClaim() {
                 <Image
                   src={
                     uploadedImages.mulkiyaBack
-                      ? "/RegClaim/Mulkiya.png"
-                      : "/RegClaim/upload.png"
+                      ? "/Mulkiya.PNG"
+                      : "/upload.PNG"
                   }
                   width={250}
                   height={150}
@@ -685,8 +685,8 @@ export default function SubmitClaim() {
                 <Image
                   src={
                     uploadedImages.licenseFront
-                      ? "/RegClaim/License.png"
-                      : "/RegClaim/upload.png"
+                      ? "/License.PNG"
+                      : "/upload.PNG"
                   }
                   width={250}
                   height={150}
@@ -725,8 +725,8 @@ export default function SubmitClaim() {
                 <Image
                   src={
                     uploadedImages.licenseBack
-                      ? "/RegClaim/License.png"
-                      : "/RegClaim/upload.png"
+                      ? "/License.PNG"
+                      : "/upload.PNG"
                   }
                   width={250}
                   height={150}

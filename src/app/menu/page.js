@@ -31,36 +31,36 @@ const Menu = () => {
     {
       id: "motor-takaful",
       title: { en: "Motor Takaful", ar: "تكافل السيارات" },
-      image: "/menu/motor-menu.png",
+      image: "/motor-menu.PNG",
       startsAt: "36/yr",
     },
     {
       id: "travel-takaful",
       title: { en: "Travel Takaful", ar: "تكافل السفر" },
-      image: "/menu/travel-menu.png",
+      image: "/travel-menu.PNG",
       startsAt: "20/yr",
     },
     {
       id: "health-takaful",
       title: { en: "Health Takaful", ar: "تكافل الصحة" },
-      image: "/menu/health-menu.png",
+      image: "/health-menu.PNG",
       startsAt: "{num}/yr",
     },
     {
       id: "helpers-takaful",
       title: { en: "Helpers Takaful", ar: "تكافل العمالة المنزلية" },
-      image: "/menu/workers-menu.png",
+      image: "/workers-menu.PNG",
       startsAt: "{num}/yr",
     },
     {
       id: "register-claim",
       title: { en: "Register Claim", ar: "تسجيل مطالبة" },
-      image: "/menu/reg-claim-menu.png",
+      image: "/reg-claim-menu.PNG",
     },
     {
       id: "property-takaful",
       title: { en: "Property Takaful", ar: "تكافل الممتلكات" },
-      image: "/menu/property-menu.png",
+      image: "/property-menu.PNG",
       startsAt: "{num}/yr",
     },
   ];
@@ -186,6 +186,7 @@ const Menu = () => {
                       width={180}
                       height={180}
                       priority
+                      unoptimized
                       sx={{
                         width: "180px",
                         height: "180px",

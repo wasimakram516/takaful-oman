@@ -86,7 +86,7 @@ const RegisterClaim = () => {
             right: 0,
             width: "100%",
             height: { xs: "35%", sm: "40%" },
-            backgroundImage: "url('/RegClaim/claim-bg.png')",
+            backgroundImage: "url('/claim-bg.PNG')",
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "bottom",

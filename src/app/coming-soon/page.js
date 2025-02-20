@@ -62,7 +62,7 @@ export default function ComingSoon() {
             right: 0,
             width: "100%",
             height: { xs: "35%", sm: "40%" },
-            backgroundImage: "url('/insurance-man.png')",
+            backgroundImage: "url('/insurance-man.PNG')",
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "bottom",
