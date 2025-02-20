@@ -15,19 +15,22 @@ import {
   MenuItem,
   Select,
   IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Header from "@/app/components/Header";
 import { useLanguage } from "@/app/contexts/LanguageContext";
 import Image from "next/image";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import { QRCodeCanvas } from "qrcode.react";
 
 export default function SubmitClaim() {
   const router = useRouter();
   const { language } = useLanguage();
   const [step, setStep] = useState(1);
-  const fileInputRef = useRef(null);
-
+  const [openQRDialog, setOpenQRDialog] = useState(false);
   const [platePrefix, setPlatePrefix] = useState("AA");
 
   const [uploadedImages, setUploadedImages] = useState({
@@ -74,7 +77,7 @@ export default function SubmitClaim() {
       mulkiya: "Mulkiya (Ownership)",
       license: "Driving License",
       upload: "Upload...",
-  
+
       // Cause of Accident Checkboxes
       overspeed: "Overspeed",
       negligence: "Negligence",
@@ -85,6 +88,9 @@ export default function SubmitClaim() {
       theft: "Theft",
       drunk: "Drunk",
       other: "Other...",
+
+      qrMessage: "Scan this QR code to proceed with payment",
+      close: "Close",
     },
     ar: {
       title: "تقديم مطالبة",
@@ -117,7 +123,7 @@ export default function SubmitClaim() {
       mulkiya: "ملكية السيارة",
       license: "رخصة القيادة",
       upload: "رفع...",
-  
+
       // Cause of Accident Checkboxes
       overspeed: "السرعة الزائدة",
       negligence: "الإهمال",
@@ -128,9 +134,11 @@ export default function SubmitClaim() {
       theft: "السرقة",
       drunk: "القيادة تحت تأثير الكحول",
       other: "أخرى...",
+
+      qrMessage: "امسح رمز الاستجابة السريعة للمتابعة والدفع",
+      close: "إغلاق",
     },
   };
-  
 
   const SketchCanvas = ({ title, backgroundImage }) => {
     const canvasRef = useRef(null);
@@ -267,6 +275,10 @@ export default function SubmitClaim() {
         [type]: event.target.files[0].name,
       }));
     }
+  };
+
+  const handleFinalize = () => {
+    setOpenQRDialog(true);
   };
 
   return (
@@ -423,49 +435,52 @@ export default function SubmitClaim() {
                 </Box>
               </Box>
               {/* Cause of Accident */}
-<Typography
-  variant="body1"
-  fontWeight="bold"
-  align="center"
-  color="primary"
-  sx={{ mt: 2 }}
->
-  {translations[language].cause}
-</Typography>
-<Box
-  sx={{
-    display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)",
-    gap: 1,
-    mt: 1,
-  }}
->
-  {[
-    "overspeed",
-    "negligence",
-    "fatigue",
-    "overtaking",
-    "weather",
-    "suddenHalt",
-    "theft",
-    "drunk",
-    "other",
-  ].map((causeKey, index) => (
-    <FormControlLabel
-      key={index}
-      control={
-        <Checkbox
-          sx={{
-            color: "#6BC24A",
-            "&.Mui-checked": { color: "#6BC24A" },
-          }}
-        />
-      }
-      label={<Typography fontSize="14px">{translations[language][causeKey]}</Typography>}
-    />
-  ))}
-</Box>
-
+              <Typography
+                variant="body1"
+                fontWeight="bold"
+                align="center"
+                color="primary"
+                sx={{ mt: 2 }}
+              >
+                {translations[language].cause}
+              </Typography>
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: 1,
+                  mt: 1,
+                }}
+              >
+                {[
+                  "overspeed",
+                  "negligence",
+                  "fatigue",
+                  "overtaking",
+                  "weather",
+                  "suddenHalt",
+                  "theft",
+                  "drunk",
+                  "other",
+                ].map((causeKey, index) => (
+                  <FormControlLabel
+                    key={index}
+                    control={
+                      <Checkbox
+                        sx={{
+                          color: "#6BC24A",
+                          "&.Mui-checked": { color: "#6BC24A" },
+                        }}
+                      />
+                    }
+                    label={
+                      <Typography fontSize="14px">
+                        {translations[language][causeKey]}
+                      </Typography>
+                    }
+                  />
+                ))}
+              </Box>
 
               {/* Accident Sketch - Drawable */}
               <SketchCanvas
@@ -916,6 +931,7 @@ export default function SubmitClaim() {
               {/* Finalize Button */}
               <Button
                 fullWidth
+                onClick={handleFinalize}
                 sx={{
                   mt: 3,
                   backgroundColor: "#BFD85F",
@@ -928,6 +944,49 @@ export default function SubmitClaim() {
               >
                 {translations[language].finalize}
               </Button>
+
+              {/* QR Code Dialog */}
+              <Dialog
+                open={openQRDialog}
+                onClose={() => setOpenQRDialog(false)}
+              >
+                <DialogTitle
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    textAlign: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography variant="body1">
+                    {translations[language].qrMessage}
+                  </Typography>
+                </DialogTitle>
+                <DialogContent
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    pb: 3,
+                  }}
+                >
+                  <QRCodeCanvas value={window.origin} size={250} />
+                  <Button
+                    sx={{
+                      mt: 3,
+                      backgroundColor: "primary.main",
+                      color: "#fff",
+                      fontWeight: "bold",
+                      textTransform: "none",
+                      borderRadius: "8px",
+                      "&:hover": { backgroundColor: "#A4C754" },
+                    }}
+                    onClick={() => router.push("/")}
+                  >
+                    {translations[language].close}
+                  </Button>
+                </DialogContent>
+              </Dialog>
             </>
           )}
         </Box>

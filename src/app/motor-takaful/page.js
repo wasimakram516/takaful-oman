@@ -10,6 +10,7 @@ import {
   FormControlLabel,
   InputAdornment,
   Dialog,
+  DialogTitle,
   DialogContent,
   IconButton,
   MenuItem,
@@ -22,11 +23,14 @@ import CreditCardIcon from "@mui/icons-material/CreditCard";
 import { useLanguage } from "@/app/contexts/LanguageContext";
 import Image from "next/image";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { QRCodeCanvas } from "qrcode.react";
+
 const MotorTakaful = () => {
   const router = useRouter();
   const { language } = useLanguage();
   const [openDialog, setOpenDialog] = useState(false);
-  const [platePrefix, setPlatePrefix] = useState("AA"); 
+  const [openQRDialog, setOpenQRDialog] = useState(false);
+  const [platePrefix, setPlatePrefix] = useState("AA");
 
   // Translations
   const translations = {
@@ -47,6 +51,9 @@ const MotorTakaful = () => {
       policy6: "Comprehensive insurance policy text line 6",
       total: "Total",
       securePayment: "Secure Payment",
+
+      qrMessage: "Scan this QR code to proceed with payment",
+      close: "Close",
     },
     ar: {
       title: "تكافل السيارات",
@@ -65,9 +72,15 @@ const MotorTakaful = () => {
       policy6: "نص بوليصة التأمين الشاملة 6",
       total: "الإجمالي",
       securePayment: "دفع آمن",
+
+      qrMessage: "امسح رمز الاستجابة السريعة للمتابعة والدفع",
+      close: "إغلاق",
     },
   };
 
+  const handlePayment = () => {
+    setOpenQRDialog(true);
+  };
   return (
     <>
       {/* Fixed Header */}
@@ -398,6 +411,7 @@ const MotorTakaful = () => {
           {/* Secure Payment Button with Card Icon */}
           <Button
             variant="contained"
+            onClick={handlePayment}
             fullWidth
             sx={{
               mt: 3,
@@ -417,6 +431,45 @@ const MotorTakaful = () => {
               sx={{ mr: 1, fontSize: { xs: "20px", sm: "24px" } }}
             />
             {translations[language].securePayment}
+          </Button>
+        </DialogContent>
+      </Dialog>
+      {/* QR Code Dialog */}
+      <Dialog open={openQRDialog} onClose={() => setOpenQRDialog(false)}>
+        <DialogTitle
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            textAlign: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="body1">
+            {translations[language].qrMessage}
+          </Typography>
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            pb: 3,
+          }}
+        >
+          <QRCodeCanvas value={window.origin} size={250} />
+          <Button
+            sx={{
+              mt: 3,
+              backgroundColor: "primary.main",
+              color: "#fff",
+              fontWeight: "bold",
+              textTransform: "none",
+              borderRadius: "8px",
+              "&:hover": { backgroundColor: "#A4C754" },
+            }}
+            onClick={() => router.push("/")}
+          >
+            {translations[language].close}
           </Button>
         </DialogContent>
       </Dialog>
