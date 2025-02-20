@@ -319,11 +319,11 @@ export default function SubmitClaim() {
               {[
                 {
                   title: translations[language].accidentSketch,
-                  image: "/sketchAccident.PNG",
+                  image: "/accident.PNG",
                 },
                 {
                   title: translations[language].damageSketch,
-                  image: "/sketchDamage.PNG",
+                  image: "/damage.PNG",
                 },
               ].map((item, index) => (
                 <Box key={index} sx={{ mt: 2, textAlign: "center" }}>
@@ -357,7 +357,7 @@ export default function SubmitClaim() {
                       }}
                     >
                       <Image
-                        src="/upload.PNG"
+                        src="/upload-bg.PNG"
                         width={20}
                         height={20}
                         alt="Upload"
@@ -596,7 +596,7 @@ export default function SubmitClaim() {
                   src={
                     uploadedImages.mulkiyaFront
                       ? "/Mulkiya.PNG"
-                      : "/upload.PNG"
+                      : "/upload-bg.PNG"
                   }
                   width={250}
                   height={150}
@@ -636,7 +636,7 @@ export default function SubmitClaim() {
                   src={
                     uploadedImages.mulkiyaBack
                       ? "/Mulkiya.PNG"
-                      : "/upload.PNG"
+                      : "/upload-bg.PNG"
                   }
                   width={250}
                   height={150}
@@ -686,7 +686,7 @@ export default function SubmitClaim() {
                   src={
                     uploadedImages.licenseFront
                       ? "/License.PNG"
-                      : "/upload.PNG"
+                      : "/upload-bg.PNG"
                   }
                   width={250}
                   height={150}
@@ -726,7 +726,7 @@ export default function SubmitClaim() {
                   src={
                     uploadedImages.licenseBack
                       ? "/License.PNG"
-                      : "/upload.PNG"
+                      : "/upload-bg.PNG"
                   }
                   width={250}
                   height={150}
