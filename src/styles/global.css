@@ -1,0 +1,19 @@
+/* Apply border-box to all elements */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    min-height: 100vh; /* Full viewport height */
+    overflow-y: auto;
+}
+
+/* Optional: If you want body to account for padding */
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content */
+}
