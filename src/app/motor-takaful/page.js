@@ -257,7 +257,7 @@ const MotorTakaful = () => {
               sx={{ display: "flex", justifyContent: "center", width: "100%" }}
             >
               <Image
-                src="/toyota-land-cruiser.PNG"
+                src="/toyota.PNG"
                 alt="Toyota Land Cruiser"
                 width={300}
                 height={180}
