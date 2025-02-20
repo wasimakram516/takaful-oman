@@ -32,6 +32,14 @@ const MotorTakaful = () => {
   const [openQRDialog, setOpenQRDialog] = useState(false);
   const [platePrefix, setPlatePrefix] = useState("AA");
 
+  const [qrValue, setQrValue] = useState("");
+  
+    useEffect(() => {
+      if (typeof window !== "undefined") {
+        setQrValue(window.origin);
+      }
+    }, []);
+    
   // Translations
   const translations = {
     en: {
@@ -456,7 +464,7 @@ const MotorTakaful = () => {
             pb: 3,
           }}
         >
-          <QRCodeCanvas value={window.origin} size={250} />
+          <QRCodeCanvas value={qrValue} size={250} />
           <Button
             sx={{
               mt: 3,

@@ -32,6 +32,13 @@ export default function SubmitClaim() {
   const [step, setStep] = useState(1);
   const [openQRDialog, setOpenQRDialog] = useState(false);
   const [platePrefix, setPlatePrefix] = useState("AA");
+  const [qrValue, setQrValue] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setQrValue(window.origin);
+    }
+  }, []);
 
   const [uploadedImages, setUploadedImages] = useState({
     mulkiyaFront: false,
@@ -970,7 +977,7 @@ export default function SubmitClaim() {
                     pb: 3,
                   }}
                 >
-                  <QRCodeCanvas value={window.origin} size={250} />
+                  <QRCodeCanvas value={qrValue} size={250} />
                   <Button
                     sx={{
                       mt: 3,
