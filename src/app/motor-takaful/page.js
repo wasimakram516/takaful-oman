@@ -277,7 +277,7 @@ const MotorTakaful = () => {
             overflow: "auto",
           }}
         >
-          <Box sx={{ mt: { lg: "150px" } }}>
+          <Box sx={{ mt: "150px" }}>
             {/* Car Image */}
             <Box
               sx={{ display: "flex", justifyContent: "center", width: "100%" }}
