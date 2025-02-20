@@ -404,8 +404,21 @@ export default function SubmitClaim() {
               <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
                 <TextField
                   fullWidth
+                  type="number"
                   placeholder={translations[language].plateNumber}
-                  sx={{ mb: 2 }}
+                  sx={{
+                    mb: 2,
+                    "& .MuiInputBase-input": {
+                      // Hide spinners for number input
+                      "&::-webkit-outer-spin-button, &::-webkit-inner-spin-button": {
+                        WebkitAppearance: "none",
+                        margin: 0,
+                      },
+                      "&[type=number]": {
+                        MozAppearance: "textfield",
+                      },
+                    },
+                  }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">

@@ -18,6 +18,7 @@ const nunito = Nunito({
 export const metadata = {
   title: "Takaful Oman",
   description: "Get the best deal for your insurance.",
+  icons: "/favicon.ico",
 };
 
 export default function RootLayout({ children }) {
