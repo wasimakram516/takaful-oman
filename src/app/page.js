@@ -11,8 +11,15 @@ import { useLanguage } from "@/app/contexts/LanguageContext";
 
 export default function Home() {
   const router = useRouter();
+  const [windowWidth, setWindowWidth] = useState(600);
   const [currentURL, setCurrentURL] = useState("");
   const { language } = useLanguage();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setWindowWidth(windowWidth);
+    }
+  }, []);
 
   // Detects the page URL for QR code generation
   useEffect(() => {
@@ -158,7 +165,7 @@ export default function Home() {
           <Box sx={{ mr: { xs: 1, sm: 2 } }}>
             <QRCodeCanvas
               value={currentURL}
-              size={window.innerWidth > 600 ? 90 : 60}
+              size={windowWidth > 600 ? 90 : 60}
             />
           </Box>
 
@@ -180,14 +187,14 @@ export default function Home() {
               <Image
                 src="/assets/android.PNG"
                 alt="Android Icon"
-                width={window.innerWidth > 600 ? 40 : 32}
-                height={window.innerWidth > 600 ? 40 : 32}
+                width={windowWidth > 600 ? 40 : 32}
+                height={windowWidth > 600 ? 40 : 32}
               />
               <Image
                 src="/assets/iphone.PNG"
                 alt="iPhone Icon"
-                width={window.innerWidth > 600 ? 40 : 32}
-                height={window.innerWidth > 600 ? 40 : 32}
+                width={windowWidth > 600 ? 40 : 32}
+                height={windowWidth > 600 ? 40 : 32}
               />
             </Box>
           </Box>
