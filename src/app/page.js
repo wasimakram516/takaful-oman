@@ -165,7 +165,7 @@ export default function Home() {
           <Box sx={{ mr: { xs: 1, sm: 2 } }}>
             <QRCodeCanvas
               value={currentURL}
-              size={windowWidth > 600 ? 90 : 60}
+              size={windowWidth > 600 ? 90 : 80}
             />
           </Box>
 
