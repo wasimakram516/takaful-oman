@@ -46,7 +46,7 @@ export default function ComingSoon() {
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          minHeight: "calc(100vh - 240px)",
+          minHeight: "calc(100vh - 170px)",
           px: 3,
           position: "relative",
           background: "linear-gradient(to bottom, #E3F2FD, white)",

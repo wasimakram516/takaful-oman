@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Box,
@@ -12,20 +12,23 @@ import {
   Radio,
   RadioGroup,
   FormControl,
-  InputAdornment,
-  FormLabel,
+  MenuItem,
+  Select,
   IconButton,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Header from "@/app/components/Header";
 import { useLanguage } from "@/app/contexts/LanguageContext";
 import Image from "next/image";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
 export default function SubmitClaim() {
   const router = useRouter();
   const { language } = useLanguage();
   const [step, setStep] = useState(1);
   const fileInputRef = useRef(null);
+
+  const [platePrefix, setPlatePrefix] = useState("AA");
 
   const [uploadedImages, setUploadedImages] = useState({
     mulkiyaFront: false,
@@ -39,7 +42,6 @@ export default function SubmitClaim() {
   const licenseFrontRef = useRef(null);
   const licenseBackRef = useRef(null);
 
-  // Translations
   const translations = {
     en: {
       title: "Submit Claim",
@@ -72,6 +74,17 @@ export default function SubmitClaim() {
       mulkiya: "Mulkiya (Ownership)",
       license: "Driving License",
       upload: "Upload...",
+  
+      // Cause of Accident Checkboxes
+      overspeed: "Overspeed",
+      negligence: "Negligence",
+      fatigue: "Fatigue",
+      overtaking: "Overtaking",
+      weather: "Weather",
+      suddenHalt: "Sudden Halt",
+      theft: "Theft",
+      drunk: "Drunk",
+      other: "Other...",
     },
     ar: {
       title: "تقديم مطالبة",
@@ -104,9 +117,141 @@ export default function SubmitClaim() {
       mulkiya: "ملكية السيارة",
       license: "رخصة القيادة",
       upload: "رفع...",
+  
+      // Cause of Accident Checkboxes
+      overspeed: "السرعة الزائدة",
+      negligence: "الإهمال",
+      fatigue: "التعب",
+      overtaking: "التجاوز",
+      weather: "الطقس",
+      suddenHalt: "التوقف المفاجئ",
+      theft: "السرقة",
+      drunk: "القيادة تحت تأثير الكحول",
+      other: "أخرى...",
     },
   };
+  
 
+  const SketchCanvas = ({ title, backgroundImage }) => {
+    const canvasRef = useRef(null);
+    const ctxRef = useRef(null);
+    const [isDrawing, setIsDrawing] = useState(false);
+
+    useEffect(() => {
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
+
+      // Set canvas size based on container
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "#000";
+      ctxRef.current = ctx;
+    }, []);
+
+    // Normalize the touch/mouse positions to avoid offset
+    const getCanvasCoordinates = (event) => {
+      const canvas = canvasRef.current;
+      const rect = canvas.getBoundingClientRect();
+
+      let clientX, clientY;
+
+      if (event.touches) {
+        clientX = event.touches[0].clientX;
+        clientY = event.touches[0].clientY;
+      } else {
+        clientX = event.clientX;
+        clientY = event.clientY;
+      }
+
+      return {
+        x: ((clientX - rect.left) / rect.width) * canvas.width,
+        y: ((clientY - rect.top) / rect.height) * canvas.height,
+      };
+    };
+
+    const startDrawing = (event) => {
+      const { x, y } = getCanvasCoordinates(event);
+      ctxRef.current.beginPath();
+      ctxRef.current.moveTo(x, y);
+      setIsDrawing(true);
+    };
+
+    const draw = (event) => {
+      if (!isDrawing) return;
+      const { x, y } = getCanvasCoordinates(event);
+      ctxRef.current.lineTo(x, y);
+      ctxRef.current.stroke();
+    };
+
+    const stopDrawing = () => {
+      ctxRef.current.closePath();
+      setIsDrawing(false);
+    };
+
+    const clearCanvas = () => {
+      const canvas = canvasRef.current;
+      ctxRef.current.clearRect(0, 0, canvas.width, canvas.height);
+    };
+
+    return (
+      <Box sx={{ mt: 2, textAlign: "center" }}>
+        <Typography
+          variant="body1"
+          fontWeight="bold"
+          align="center"
+          color="primary"
+        >
+          {title}
+        </Typography>
+        <Box
+          sx={{
+            width: "100%",
+            height: "150px",
+            border: "2px dashed #999",
+            position: "relative",
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundSize: "contain",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            backgroundColor: "#fff",
+          }}
+        >
+          <canvas
+            ref={canvasRef}
+            onMouseDown={startDrawing}
+            onMouseMove={draw}
+            onMouseUp={stopDrawing}
+            onMouseLeave={stopDrawing}
+            onTouchStart={startDrawing}
+            onTouchMove={draw}
+            onTouchEnd={stopDrawing}
+            style={{
+              width: "100%",
+              height: "100%",
+              touchAction: "none",
+              display: "block",
+            }}
+          />
+          {/* Clear Button */}
+          <IconButton
+            sx={{
+              position: "absolute",
+              bottom: 5,
+              right: 5,
+              backgroundColor: "#fff",
+            }}
+            onClick={clearCanvas}
+          >
+            <RestartAltIcon sx={{ color: "#6BC24A" }} />
+          </IconButton>
+        </Box>
+      </Box>
+    );
+  };
   const handleNext = () => {
     if (step < 3) setStep(step + 1);
   };
@@ -117,7 +262,10 @@ export default function SubmitClaim() {
 
   const handleFileUpload = (event, type) => {
     if (event.target.files.length > 0) {
-      setUploadedImages((prev) => ({ ...prev, [type]: true }));
+      setUploadedImages((prev) => ({
+        ...prev,
+        [type]: event.target.files[0].name,
+      }));
     }
   };
 
@@ -144,7 +292,7 @@ export default function SubmitClaim() {
           flexDirection: "column",
           alignItems: "center",
           textAlign: "center",
-          minHeight: "calc(100vh - 240px)",
+          minHeight: "calc(100vh - 170px)",
           px: 3,
           background: "linear-gradient(to bottom, #E3F2FD, white)",
           borderRadius: 2,
@@ -166,18 +314,20 @@ export default function SubmitClaim() {
         <Box
           sx={{
             width: { xs: "90%", sm: "500px" },
-            backgroundColor: "rgba(255,255,255,0.6)",
+            backgroundColor: "rgba(255,255,255,0.9)",
             borderRadius: 3,
             padding: 3,
             boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
+            border: "1px solid #6BC24A",
             textAlign: "left",
             position: "absolute",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             zIndex: 10,
-            maxHeight: "80%",
+            maxHeight: "90%",
             overflowY: "auto",
+            userSelect: "none",
           }}
         >
           <Box
@@ -242,6 +392,7 @@ export default function SubmitClaim() {
                   </Typography>
                   <TextField
                     fullWidth
+                    type="date"
                     placeholder="dd/mm/yyyy"
                     size="small"
                     sx={{ backgroundColor: "#fff" }}
@@ -253,6 +404,7 @@ export default function SubmitClaim() {
                   </Typography>
                   <TextField
                     fullWidth
+                    type="time"
                     placeholder="hour:minute"
                     size="small"
                     sx={{ backgroundColor: "#fff" }}
@@ -270,102 +422,62 @@ export default function SubmitClaim() {
                   />
                 </Box>
               </Box>
-
               {/* Cause of Accident */}
-              <Typography
-                variant="body1"
-                fontWeight="bold"
-                align="center"
-                color="primary"
-                sx={{ mt: 2 }}
-              >
-                {translations[language].cause}
-              </Typography>
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(3, 1fr)",
-                  gap: 1,
-                  mt: 1,
-                }}
-              >
-                {[
-                  "Overspeed",
-                  "Negligence",
-                  "Fatigue",
-                  "Overtaking",
-                  "Weather",
-                  "Sudden Halt",
-                  "Theft",
-                  "Drunk",
-                  "Other...",
-                ].map((cause, index) => (
-                  <FormControlLabel
-                    key={index}
-                    control={
-                      <Checkbox
-                        sx={{
-                          color: "#6BC24A",
-                          "&.Mui-checked": { color: "#6BC24A" },
-                        }}
-                      />
-                    }
-                    label={<Typography fontSize="14px">{cause}</Typography>}
-                  />
-                ))}
-              </Box>
+<Typography
+  variant="body1"
+  fontWeight="bold"
+  align="center"
+  color="primary"
+  sx={{ mt: 2 }}
+>
+  {translations[language].cause}
+</Typography>
+<Box
+  sx={{
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gap: 1,
+    mt: 1,
+  }}
+>
+  {[
+    "overspeed",
+    "negligence",
+    "fatigue",
+    "overtaking",
+    "weather",
+    "suddenHalt",
+    "theft",
+    "drunk",
+    "other",
+  ].map((causeKey, index) => (
+    <FormControlLabel
+      key={index}
+      control={
+        <Checkbox
+          sx={{
+            color: "#6BC24A",
+            "&.Mui-checked": { color: "#6BC24A" },
+          }}
+        />
+      }
+      label={<Typography fontSize="14px">{translations[language][causeKey]}</Typography>}
+    />
+  ))}
+</Box>
 
-              {/* Accident & Damage Sketch */}
-              {[
-                {
-                  title: translations[language].accidentSketch,
-                  image: "/accident.PNG",
-                },
-                {
-                  title: translations[language].damageSketch,
-                  image: "/damage.PNG",
-                },
-              ].map((item, index) => (
-                <Box key={index} sx={{ mt: 2, textAlign: "center" }}>
-                  <Typography
-                    variant="body1"
-                    fontWeight="bold"
-                    align="center"
-                    color="primary"
-                  >
-                    {item.title}
-                  </Typography>
-                  <Box
-                    sx={{
-                      width: "100%",
-                      height: "150px",
-                      backgroundImage: `url(${item.image})`,
-                      backgroundSize: "contain",
-                      backgroundRepeat: "no-repeat",
-                      border: "2px dashed #999",
-                      mt: 1,
-                      position: "relative",
-                    }}
-                  >
-                    {/* Upload Icon */}
-                    <IconButton
-                      sx={{
-                        position: "absolute",
-                        bottom: 5,
-                        right: 5,
-                        backgroundColor: "#fff",
-                      }}
-                    >
-                      <Image
-                        src="/upload-bg.PNG"
-                        width={20}
-                        height={20}
-                        alt="Upload"
-                      />
-                    </IconButton>
-                  </Box>
-                </Box>
-              ))}
+
+              {/* Accident Sketch - Drawable */}
+              <SketchCanvas
+                title={translations[language].accidentSketch}
+                backgroundImage="/accident.PNG"
+              />
+
+              {/* Damage Sketch - Drawable */}
+              <SketchCanvas
+                title={translations[language].damageSketch}
+                backgroundImage="/damage.PNG"
+              />
 
               {/* Next Button */}
               <Button
@@ -401,34 +513,73 @@ export default function SubmitClaim() {
               </Typography>
 
               {/* Plate Number Input */}
-              <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+              <Box
+                sx={{
+                  mb: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  borderRadius: "12px",
+                  border: "1px solid #ccc",
+                  padding: "8px",
+                  transition: "all 0.3s ease-in-out",
+                  "&:hover": {
+                    borderColor: "#6BC24A", // Match MUI TextField hover effect
+                  },
+                  "&:focus-within": {
+                    borderColor: "#6BC24A", // Same as focused text field
+                    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
+                  },
+                }}
+              >
+                {/* Dropdown for Plate Prefix */}
+                <FormControl sx={{ minWidth: 70 }}>
+                  <Select
+                    value={platePrefix}
+                    onChange={(e) => setPlatePrefix(e.target.value)}
+                    displayEmpty
+                    variant="standard"
+                    sx={{
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                      backgroundColor: "transparent",
+                      "&:before": { borderBottom: "none" },
+                      "&:after": { borderBottom: "none" },
+                      "& .MuiSelect-icon": { color: "#6BC24A" },
+                    }}
+                  >
+                    <MenuItem value="A">A</MenuItem>
+                    <MenuItem value="B">B</MenuItem>
+                    <MenuItem value="D">D</MenuItem>
+                    <MenuItem value="H">H</MenuItem>
+                    <MenuItem value="AA">AA</MenuItem>
+                  </Select>
+                </FormControl>
+
+                {/* Plate Number Input */}
                 <TextField
                   fullWidth
                   type="number"
                   placeholder={translations[language].plateNumber}
                   sx={{
-                    mb: 2,
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      border: "none",
+                    },
                     "& .MuiInputBase-input": {
-                      // Hide spinners for number input
-                      "&::-webkit-outer-spin-button, &::-webkit-inner-spin-button": {
-                        WebkitAppearance: "none",
-                        margin: 0,
-                      },
+                      fontSize: "16px",
+                      padding: "8px",
+                      backgroundColor: "transparent",
+                      "&::-webkit-outer-spin-button, &::-webkit-inner-spin-button":
+                        {
+                          WebkitAppearance: "none",
+                          margin: 0,
+                        },
                       "&[type=number]": {
                         MozAppearance: "textfield",
                       },
                     },
                   }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        {translations[language].platePrefix}
-                      </InputAdornment>
-                    ),
-                  }}
                 />
               </Box>
-
               {/* Preferred Repair Area */}
               <Typography
                 variant="body1"
@@ -570,184 +721,196 @@ export default function SubmitClaim() {
                 {translations[language].documentsUpload}
               </Typography>
 
-              {/* Mulkiya (Ownership) */}
+              {/* Mulkiya (Ownership) Section */}
               <Typography
                 variant="body1"
                 fontWeight="bold"
                 color="primary"
-                sx={{ mt: 2 }}
+                sx={{ mt: 2, textAlign: "center", textDecoration: "underline" }}
               >
                 {translations[language].mulkiya}
               </Typography>
 
-              {/* Mulkiya Front */}
               <Box
                 sx={{
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
                   mt: 1,
+                  gap: 2,
                 }}
               >
-                <Typography variant="body2" fontWeight="bold">
-                  {translations[language].mulkiyaFront}
-                </Typography>
-                <input
-                  type="file"
-                  ref={mulkiyaFrontRef}
-                  onChange={(e) => handleFileUpload(e, "mulkiyaFront")}
-                  style={{ display: "none" }}
-                />
-                <Button
-                  variant="outlined"
-                  onClick={() => mulkiyaFrontRef.current.click()}
-                  sx={{ textTransform: "none", mt: 1 }}
-                >
-                  {translations[language].upload}
-                </Button>
-                <Image
-                  src={
-                    uploadedImages.mulkiyaFront
-                      ? "/Mulkiya.PNG"
-                      : "/upload-bg.PNG"
-                  }
-                  width={250}
-                  height={150}
-                  alt="Mulkiya Front"
-                  style={{
-                    objectFit: "contain",
+                {/* Mulkiya Reference Image + Upload Inputs */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 2,
+                    width: "100%",
                   }}
-                />
+                >
+                  <Image
+                    src="/Mulkiya.PNG"
+                    width={200}
+                    height={120}
+                    alt="Mulkiya Sample"
+                    style={{ objectFit: "contain", borderRadius: "5px" }}
+                  />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 1,
+                      flex: 1,
+                    }}
+                  >
+                    <Typography variant="body2" fontWeight="bold" color="error">
+                      {translations[language].mulkiyaFront}
+                    </Typography>
+                    <input
+                      type="file"
+                      ref={mulkiyaFrontRef}
+                      onChange={(e) => handleFileUpload(e, "mulkiyaFront")}
+                      style={{ display: "none" }}
+                    />
+                    <Button
+                      variant="outlined"
+                      onClick={() => mulkiyaFrontRef.current.click()}
+                      sx={{ textTransform: "none" }}
+                    >
+                      {translations[language].upload}
+                    </Button>
+                    {uploadedImages.mulkiyaFront && (
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "#4CAF50", mt: 1 }}
+                      >
+                        {uploadedImages.mulkiyaFront}
+                      </Typography>
+                    )}
+
+                    <Typography variant="body2" fontWeight="bold" color="error">
+                      {translations[language].mulkiyaBack}
+                    </Typography>
+                    <input
+                      type="file"
+                      ref={mulkiyaBackRef}
+                      onChange={(e) => handleFileUpload(e, "mulkiyaBack")}
+                      style={{ display: "none" }}
+                    />
+                    <Button
+                      variant="outlined"
+                      onClick={() => mulkiyaBackRef.current.click()}
+                      sx={{ textTransform: "none" }}
+                    >
+                      {translations[language].upload}
+                    </Button>
+                    {uploadedImages.mulkiyaBack && (
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "#4CAF50", mt: 1 }}
+                      >
+                        {uploadedImages.mulkiyaBack}
+                      </Typography>
+                    )}
+                  </Box>
+                </Box>
               </Box>
 
-              {/* Mulkiya Back */}
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  mt: 2,
-                }}
-              >
-                <Typography variant="body2" fontWeight="bold">
-                  {translations[language].mulkiyaBack}
-                </Typography>
-                <input
-                  type="file"
-                  ref={mulkiyaBackRef}
-                  onChange={(e) => handleFileUpload(e, "mulkiyaBack")}
-                  style={{ display: "none" }}
-                />
-                <Button
-                  variant="outlined"
-                  onClick={() => mulkiyaBackRef.current.click()}
-                  sx={{ textTransform: "none", mt: 1 }}
-                >
-                  {translations[language].upload}
-                </Button>
-                <Image
-                  src={
-                    uploadedImages.mulkiyaBack
-                      ? "/Mulkiya.PNG"
-                      : "/upload-bg.PNG"
-                  }
-                  width={250}
-                  height={150}
-                  alt="Mulkiya Back"
-                  style={{
-                    objectFit: "contain",
-                  }}
-                />
-              </Box>
-
-              {/* Driving License */}
+              {/* Driving License Section */}
               <Typography
                 variant="body1"
                 fontWeight="bold"
                 color="primary"
-                sx={{ mt: 3 }}
+                sx={{ mt: 3, textAlign: "center", textDecoration: "underline" }}
               >
                 {translations[language].license}
               </Typography>
 
-              {/* License Front */}
               <Box
                 sx={{
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
                   mt: 1,
+                  gap: 2,
                 }}
               >
-                <Typography variant="body2" fontWeight="bold">
-                  {translations[language].licenseFront}
-                </Typography>
-                <input
-                  type="file"
-                  ref={licenseFrontRef}
-                  onChange={(e) => handleFileUpload(e, "licenseFront")}
-                  style={{ display: "none" }}
-                />
-                <Button
-                  variant="outlined"
-                  onClick={() => licenseFrontRef.current.click()}
-                  sx={{ textTransform: "none", mt: 1 }}
-                >
-                  {translations[language].upload}
-                </Button>
-                <Image
-                  src={
-                    uploadedImages.licenseFront
-                      ? "/License.PNG"
-                      : "/upload-bg.PNG"
-                  }
-                  width={250}
-                  height={150}
-                  alt="License Front"
-                  style={{
-                    objectFit: "contain",
+                {/* License Reference Image + Upload Inputs */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 2,
+                    width: "100%",
                   }}
-                />
-              </Box>
+                >
+                  <Image
+                    src="/License.PNG"
+                    width={200}
+                    height={120}
+                    alt="License Sample"
+                    style={{ objectFit: "contain", borderRadius: "5px" }}
+                  />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 1,
+                      flex: 1,
+                    }}
+                  >
+                    <Typography variant="body2" fontWeight="bold" color="error">
+                      {translations[language].licenseFront}
+                    </Typography>
+                    <input
+                      type="file"
+                      ref={licenseFrontRef}
+                      onChange={(e) => handleFileUpload(e, "licenseFront")}
+                      style={{ display: "none" }}
+                    />
+                    <Button
+                      variant="outlined"
+                      onClick={() => licenseFrontRef.current.click()}
+                      sx={{ textTransform: "none" }}
+                    >
+                      {translations[language].upload}
+                    </Button>
+                    {uploadedImages.licenseFront && (
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "#4CAF50", mt: 1 }}
+                      >
+                        {uploadedImages.licenseFront}
+                      </Typography>
+                    )}
 
-              {/* License Back */}
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  mt: 2,
-                }}
-              >
-                <Typography variant="body2" fontWeight="bold">
-                  {translations[language].licenseBack}
-                </Typography>
-                <input
-                  type="file"
-                  ref={licenseBackRef}
-                  onChange={(e) => handleFileUpload(e, "licenseBack")}
-                  style={{ display: "none" }}
-                />
-                <Button
-                  variant="outlined"
-                  onClick={() => licenseBackRef.current.click()}
-                  sx={{ textTransform: "none", mt: 1 }}
-                >
-                  {translations[language].upload}
-                </Button>
-                <Image
-                  src={
-                    uploadedImages.licenseBack
-                      ? "/License.PNG"
-                      : "/upload-bg.PNG"
-                  }
-                  width={250}
-                  height={150}
-                  alt="License Back"
-                  style={{
-                    objectFit: "contain",
-                  }}
-                />
+                    <Typography variant="body2" fontWeight="bold" color="error">
+                      {translations[language].licenseBack}
+                    </Typography>
+                    <input
+                      type="file"
+                      ref={licenseBackRef}
+                      onChange={(e) => handleFileUpload(e, "licenseBack")}
+                      style={{ display: "none" }}
+                    />
+                    <Button
+                      variant="outlined"
+                      onClick={() => licenseBackRef.current.click()}
+                      sx={{ textTransform: "none" }}
+                    >
+                      {translations[language].upload}
+                    </Button>
+                    {uploadedImages.licenseBack && (
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "#4CAF50", mt: 1 }}
+                      >
+                        {uploadedImages.licenseBack}
+                      </Typography>
+                    )}
+                  </Box>
+                </Box>
               </Box>
 
               {/* Finalize Button */}

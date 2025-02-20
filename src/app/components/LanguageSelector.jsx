@@ -6,11 +6,11 @@ const LanguageSelector = () => {
   const { language, toggleLanguage } = useLanguage();
 
   return (
-    <Box sx={{ position: "relative", width: "80px", height: "40px" }}>
+    <Box sx={{ position: "absolute", top:10, right:20, width: "80px", height: "40px" }}>
       {/* Inactive Button (Behind) */}
       <motion.div
-        initial={{ opacity: 0.5, y: 15, x: 10 }}
-        animate={{ opacity: 0.5, y: 15, x: 10 }}
+        initial={{ opacity: 0.5, y: 10, x: 10 }}
+        animate={{ opacity: 0.5, y: 10, x: 10 }}
         transition={{ duration: 0.2 }}
         style={{
           position: "absolute",

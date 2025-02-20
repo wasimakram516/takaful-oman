@@ -84,7 +84,7 @@ const Menu = () => {
           flexDirection: "column",
           alignItems: "center",
           textAlign: "center",
-          minHeight: "calc(100vh - 240px)",
+          minHeight: "calc(100vh - 170px)",
           background: "linear-gradient(to bottom, #E3F2FD, white)",
           paddingBottom: 4,
         }}

@@ -58,7 +58,7 @@ export default function Home() {
           flexDirection: "column",
           alignItems: "center",
           textAlign: "center",
-          height: "calc(100vh - 240px)",
+          height: "calc(100vh - 170px)",
           background: "linear-gradient(to bottom, #E3F2FD, white)",
           position: "relative",
           paddingBottom: "50px",
@@ -72,7 +72,6 @@ export default function Home() {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            height: "calc(100vh - 250px)", // Adjusted for header height
             flexGrow: 1, // Keeps it centered even when there's extra space
             px: { xs: 2, sm: 4 }, // Responsive padding
           }}

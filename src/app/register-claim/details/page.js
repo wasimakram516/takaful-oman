@@ -72,7 +72,7 @@ export default function Details() {
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          minHeight: "calc(100vh - 240px)",
+          minHeight: "calc(100vh - 170px)",
           px: 3,
           position: "relative",
           background: "linear-gradient(to bottom, #E3F2FD, white)",
@@ -99,16 +99,17 @@ export default function Details() {
         <Box
           sx={{
             width: { xs: "90%", sm: "500px" },
-            backgroundColor: "rgba(255,255,255,0.6)",
+            backgroundColor: "rgba(255,255,255,0.9)",
             borderRadius: 3,
             padding: 3,
             boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
+            border: "1px solid #6BC24A",
+            userSelect:"none",
             textAlign: "left",
             position: "absolute",
             top: "40%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            border: "1px solid #6BC24A",
             zIndex: 10,
           }}
         >

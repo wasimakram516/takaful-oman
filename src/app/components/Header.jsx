@@ -19,11 +19,11 @@ const Header = () => {
           flexDirection: "column",
           alignItems: "center",
           textAlign: "center",
-          py: 2,
+          pt: 2,
         }}
       >
         {/* Language Selector (Top-Right) */}
-        <Box sx={{ width: "100%", display: "flex", justifyContent: "flex-end", px: 2, mt: 1, mr:4 }}>
+        <Box sx={{ width: "100%", position:"relative"}}>
           <LanguageSelector />
         </Box>
 
@@ -33,7 +33,6 @@ const Header = () => {
           sx={{
             display: "flex",
             justifyContent: "center",
-            mt: 1,
             cursor: "pointer",
           }}
         >

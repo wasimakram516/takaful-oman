@@ -11,7 +11,10 @@ import {
   InputAdornment,
   Dialog,
   DialogContent,
-  IconButton
+  IconButton,
+  MenuItem,
+  Select,
+  FormControl,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import Header from "@/app/components/Header";
@@ -23,6 +26,7 @@ const MotorTakaful = () => {
   const router = useRouter();
   const { language } = useLanguage();
   const [openDialog, setOpenDialog] = useState(false);
+  const [platePrefix, setPlatePrefix] = useState("AA"); 
 
   // Translations
   const translations = {
@@ -71,7 +75,13 @@ const MotorTakaful = () => {
 
       {/* Back Button */}
       <IconButton
-        sx={{ position: "absolute", top: 20, left: 20, color: "#333", zIndex:999 }}
+        sx={{
+          position: "absolute",
+          top: 20,
+          left: 20,
+          color: "#333",
+          zIndex: 999,
+        }}
         onClick={() => router.push("/menu")}
       >
         <ArrowBackIcon />
@@ -85,7 +95,7 @@ const MotorTakaful = () => {
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          minHeight: "calc(100vh - 240px)",
+          minHeight: "calc(100vh - 170px)",
           px: 3,
           position: "relative",
           background: "linear-gradient(to bottom, #E3F2FD, white)",
@@ -116,12 +126,12 @@ const MotorTakaful = () => {
             borderRadius: 3,
             padding: 3,
             boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
+            border: "1px solid #6BC24A",
             textAlign: "left",
             position: "absolute",
             top: "40%",
             left: "50%",
             transform: "translate(-50%,-50%)",
-            border: "1px solid #6BC24A",
             zIndex: 10,
           }}
         >
@@ -135,47 +145,73 @@ const MotorTakaful = () => {
           </Typography>
 
           {/* Form Fields */}
-          <TextField
-            fullWidth
-            type="number"
-            placeholder={translations[language].plateNumber}
+          <Box
             sx={{
               mb: 2,
-              "& .MuiInputBase-input": {
-                // Hide spinners for number input
-                "&::-webkit-outer-spin-button, &::-webkit-inner-spin-button": {
-                  WebkitAppearance: "none",
-                  margin: 0,
-                },
-                "&[type=number]": {
-                  MozAppearance: "textfield",
-                },
+              display: "flex",
+              alignItems: "center",
+              borderRadius: "12px",
+              border: "1px solid #ccc",
+              padding: "8px",
+              transition: "all 0.3s ease-in-out",
+              "&:hover": {
+                borderColor: "#6BC24A", // Match MUI TextField hover effect
+              },
+              "&:focus-within": {
+                borderColor: "#6BC24A", // Same as focused text field
+                boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
               },
             }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">AAA</InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            fullWidth
-            type="number"
-            placeholder={translations[language].licenseNumber}
-            sx={{
-              mb: 2,
-              "& .MuiInputBase-input": {
-                // Hide spinners for number input
-                "&::-webkit-outer-spin-button, &::-webkit-inner-spin-button": {
-                  WebkitAppearance: "none",
-                  margin: 0,
+          >
+            {/* Dropdown for Plate Prefix */}
+            <FormControl sx={{ minWidth: 70 }}>
+              <Select
+                value={platePrefix}
+                onChange={(e) => setPlatePrefix(e.target.value)}
+                displayEmpty
+                variant="standard"
+                sx={{
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                  backgroundColor: "transparent",
+                  "&:before": { borderBottom: "none" },
+                  "&:after": { borderBottom: "none" },
+                  "& .MuiSelect-icon": { color: "#6BC24A" },
+                }}
+              >
+                <MenuItem value="A">A</MenuItem>
+                <MenuItem value="B">B</MenuItem>
+                <MenuItem value="D">D</MenuItem>
+                <MenuItem value="H">H</MenuItem>
+                <MenuItem value="AA">AA</MenuItem>
+              </Select>
+            </FormControl>
+
+            {/* Plate Number Input */}
+            <TextField
+              fullWidth
+              type="number"
+              placeholder={translations[language].plateNumber}
+              sx={{
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "none",
                 },
-                "&[type=number]": {
-                  MozAppearance: "textfield",
+                "& .MuiInputBase-input": {
+                  fontSize: "16px",
+                  padding: "8px",
+                  backgroundColor: "transparent",
+                  "&::-webkit-outer-spin-button, &::-webkit-inner-spin-button":
+                    {
+                      WebkitAppearance: "none",
+                      margin: 0,
+                    },
+                  "&[type=number]": {
+                    MozAppearance: "textfield",
+                  },
                 },
-              },
-            }}
-          />
+              }}
+            />
+          </Box>
           {/* Mobile Number Field */}
           <TextField
             fullWidth
@@ -239,8 +275,8 @@ const MotorTakaful = () => {
               borderRadius: "20px",
               fontWeight: "bold",
               textTransform: "none",
-              backgroundColor:"primary.main",
-              color:"#fff",
+              backgroundColor: "primary.main",
+              color: "#fff",
               py: 1.5,
             }}
           >
@@ -373,8 +409,8 @@ const MotorTakaful = () => {
               alignItems: "center",
               justifyContent: "center",
               fontSize: { xs: "14px", sm: "16px" },
-              backgroundColor:"primary.main",
-              color:"#fff",
+              backgroundColor: "primary.main",
+              color: "#fff",
             }}
           >
             <CreditCardIcon
