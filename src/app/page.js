@@ -131,7 +131,7 @@ export default function Home() {
             >
               {translations[language].insuranceBtn}
               <Image
-                src="/assets/arrow1.PNG"
+                src="/arrow1.PNG"
                 alt="Arrow Icon"
                 width={24}
                 height={24}
@@ -185,13 +185,13 @@ export default function Home() {
             </Typography>
             <Box sx={{ display: "flex", gap: { xs: 1, sm: 2 } }}>
               <Image
-                src="/assets/android.PNG"
+                src="/android.PNG"
                 alt="Android Icon"
                 width={windowWidth > 600 ? 40 : 32}
                 height={windowWidth > 600 ? 40 : 32}
               />
               <Image
-                src="/assets/iphone.PNG"
+                src="/iphone.PNG"
                 alt="iPhone Icon"
                 width={windowWidth > 600 ? 40 : 32}
                 height={windowWidth > 600 ? 40 : 32}

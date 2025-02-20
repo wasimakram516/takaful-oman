@@ -31,36 +31,36 @@ const Menu = () => {
     {
       id: "motor-takaful",
       title: { en: "Motor Takaful", ar: "تكافل السيارات" },
-      image: "/assets/menu/motor-menu.png",
+      image: "/menu/motor-menu.png",
       startsAt: "36/yr",
     },
     {
       id: "travel-takaful",
       title: { en: "Travel Takaful", ar: "تكافل السفر" },
-      image: "/assets/menu/travel-menu.png",
+      image: "/menu/travel-menu.png",
       startsAt: "20/yr",
     },
     {
       id: "health-takaful",
       title: { en: "Health Takaful", ar: "تكافل الصحة" },
-      image: "/assets/menu/health-menu.png",
+      image: "/menu/health-menu.png",
       startsAt: "{num}/yr",
     },
     {
       id: "helpers-takaful",
       title: { en: "Helpers Takaful", ar: "تكافل العمالة المنزلية" },
-      image: "/assets/menu/workers-menu.png",
+      image: "/menu/workers-menu.png",
       startsAt: "{num}/yr",
     },
     {
       id: "register-claim",
       title: { en: "Register Claim", ar: "تسجيل مطالبة" },
-      image: "/assets/menu/reg-claim-menu.png",
+      image: "/menu/reg-claim-menu.png",
     },
     {
       id: "property-takaful",
       title: { en: "Property Takaful", ar: "تكافل الممتلكات" },
-      image: "/assets/menu/property-menu.png",
+      image: "/menu/property-menu.png",
       startsAt: "{num}/yr",
     },
   ];

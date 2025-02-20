@@ -38,7 +38,7 @@ const Header = () => {
           }}
         >
           <Image
-            src="/assets/logo-takaful.PNG"
+            src="/logo-takaful.PNG"
             alt="Takaful Oman Logo"
             width={130}
             height={200}

@@ -101,7 +101,7 @@ const MotorTakaful = () => {
             right: 0,
             width: "100%",
             height: { xs: "35%", sm: "40%" },
-            backgroundImage: "url('/assets/motor-bg.png')",
+            backgroundImage: "url('/motor-bg.png')",
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "bottom",
@@ -257,7 +257,7 @@ const MotorTakaful = () => {
               sx={{ display: "flex", justifyContent: "center", width: "100%" }}
             >
               <Image
-                src="/assets/toyota-land-cruiser.png"
+                src="/toyota-land-cruiser.png"
                 alt="Toyota Land Cruiser"
                 width={300}
                 height={180}
