@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -39,7 +39,7 @@ const MotorTakaful = () => {
         setQrValue(window.origin);
       }
     }, []);
-    
+
   // Translations
   const translations = {
     en: {
