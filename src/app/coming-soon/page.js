@@ -1,14 +1,14 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Box, Typography, IconButton } from "@mui/material";
+import { useEffect, useState, Suspense } from "react";
+import { Box, Typography, IconButton, CircularProgress } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Header from "@/app/components/Header";
 import { useLanguage } from "@/app/contexts/LanguageContext";
 import { motion } from "framer-motion";
 
-export default function ComingSoon() {
+function ComingSoonContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { language } = useLanguage();
@@ -16,10 +16,11 @@ export default function ComingSoon() {
   // State to hold the service name
   const [service, setService] = useState("Takaful");
 
-  // Use effect to update service only on the client-side
+  // To ensure this runs only on the client side
   useEffect(() => {
-    if (searchParams.get("service")) {
-      setService(searchParams.get("service"));
+    const serviceParam = searchParams.get("service");
+    if (serviceParam) {
+      setService(serviceParam);
     }
   }, [searchParams]);
 
@@ -121,5 +122,20 @@ export default function ComingSoon() {
         </Box>
       </Box>
     </>
+  );
+}
+
+// Wrap with Suspense to avoid pre-rendering issues
+export default function ComingSoon() {
+  return (
+    <Suspense
+      fallback={
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+          <CircularProgress color="primary" />
+        </Box>
+      }
+    >
+      <ComingSoonContent />
+    </Suspense>
   );
 }
