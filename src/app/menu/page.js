@@ -18,11 +18,13 @@ const Menu = () => {
       selectInsurance: "Select Insurance to Start",
       comingSoon: "Coming Soon",
       startsAt: "Starts at",
+      startsAtRO6: "Starts at RO 6",      
     },
     ar: {
       selectInsurance: "حدد التأمين للبدء",
       comingSoon: "قريبًا",
       startsAt: "يبدأ من",
+      startsAtRO6: "يبدأ من ٦ ريال",
     },
   };
 
@@ -38,19 +40,19 @@ const Menu = () => {
       id: "travel-takaful",
       title: { en: "Travel Takaful", ar: "تكافل السفر" },
       image: "/travel-menu.PNG",
-      startsAt: "20/yr",
+      startsAt: "RO 6",
     },
     {
       id: "health-takaful",
       title: { en: "Health Takaful", ar: "تكافل الصحة" },
       image: "/health-menu.PNG",
-      startsAt: "{num}/yr",
+      startsAt: "coming-soon",
     },
     {
       id: "helpers-takaful",
       title: { en: "Helpers Takaful", ar: "تكافل العمالة المنزلية" },
       image: "/workers-menu.PNG",
-      startsAt: "{num}/yr",
+      startsAt: "coming-soon",
     },
     {
       id: "register-claim",
@@ -61,18 +63,19 @@ const Menu = () => {
       id: "property-takaful",
       title: { en: "Property Takaful", ar: "تكافل الممتلكات" },
       image: "/property-menu.PNG",
-      startsAt: "{num}/yr",
+      startsAt: "coming-soon",
     },
   ];
+  
 
   // Handle Click on Insurance Cards
-  const handleClick = (id) => {
+  const handleClick = (id, title) => {
     if (id === "motor-takaful" || id === "register-claim") {
       router.push(`/${id}`);
     } else {
-      router.push("/coming-soon"); // Redirect to Coming Soon page for unavailable services
+      router.push(`/coming-soon?service=${encodeURIComponent(title[language])}`);
     }
-  };
+  };  
 
   return (
     <>
@@ -140,8 +143,9 @@ const Menu = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
                 >
-                  <Box
-                    onClick={() => handleClick(option.id)}
+                 <Box 
+                 onClick={() => handleClick(option.id, option.title)}
+
                     sx={{
                       position: "relative",
                       cursor: "pointer",
@@ -159,25 +163,30 @@ const Menu = () => {
                       boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.15)",
                     }}
                   >
-                    {/* Starts At Badge (Top Right) */}
-                    {option.startsAt && (
-                      <Box
-                        sx={{
-                          position: "absolute",
-                          top: -10,
-                          right: 10,
-                          backgroundColor: "primary.main",
-                          color: "#fff",
-                          px: 1.5,
-                          py: 0.5,
-                          borderRadius: "8px",
-                          fontSize: "12px",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        {`${translations[language].startsAt} ${option.startsAt}`}
-                      </Box>
-                    )}
+                   {/* Starts At Badge (Top Right) */}
+{option.startsAt && (
+  <Box
+    sx={{
+      position: "absolute",
+      top: -10,
+      right: 10,
+      backgroundColor: "primary.main",
+      color: "#fff",
+      px: 1.5,
+      py: 0.5,
+      borderRadius: "8px",
+      fontSize: "12px",
+      fontWeight: "bold",
+    }}
+  >
+    {option.startsAt === "RO 6"
+      ? translations[language].startsAtRO6
+      : option.startsAt === "coming-soon"
+      ? translations[language].comingSoon
+      : `${translations[language].startsAt} ${option.startsAt}`}
+  </Box>
+)}
+
 
                     {/* Insurance Image */}
                     <Image

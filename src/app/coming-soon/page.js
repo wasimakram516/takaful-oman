@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Box, Typography, IconButton } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Header from "@/app/components/Header";
@@ -9,17 +9,21 @@ import { motion } from "framer-motion";
 
 export default function ComingSoon() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { language } = useLanguage();
+
+  // Extract service name from query parameters
+  const service = searchParams.get("service") || "Takaful";
 
   // Translations
   const translations = {
     en: {
-      title: "{Service} Takaful",
+      title: `${service}`,
       comingSoon: "This service is coming soon.",
       back: "Back",
     },
     ar: {
-      title: "{الخدمة} تكافل",
+      title: `${service} تكافل`,
       comingSoon: "هذه الخدمة ستتوفر قريباً.",
       back: "رجوع",
     },
@@ -101,7 +105,7 @@ export default function ComingSoon() {
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
             >
-              <Typography variant="body1" color="error" sx={{ mt: 2 }}>
+              <Typography variant="body1" color="#0077B6" sx={{ mt: 2 }}>
                 {translations[language].comingSoon}
               </Typography>
             </motion.div>
