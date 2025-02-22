@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Box, Typography, IconButton } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Header from "@/app/components/Header";
@@ -12,8 +13,15 @@ export default function ComingSoon() {
   const searchParams = useSearchParams();
   const { language } = useLanguage();
 
-  // Extract service name from query parameters
-  const service = searchParams.get("service") || "Takaful";
+  // State to hold the service name
+  const [service, setService] = useState("Takaful");
+
+  // Use effect to update service only on the client-side
+  useEffect(() => {
+    if (searchParams.get("service")) {
+      setService(searchParams.get("service"));
+    }
+  }, [searchParams]);
 
   // Translations
   const translations = {
