@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^4.1.0",
     "@mui/icons-material": "^6.4.5",
     "@mui/material": "^6.4.5",
+    "@react-google-maps/api": "^2.20.6",
     "axios": "^1.7.9",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",

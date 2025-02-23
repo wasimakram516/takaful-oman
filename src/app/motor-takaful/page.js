@@ -16,6 +16,8 @@ import {
   MenuItem,
   Select,
   FormControl,
+  Radio,
+  RadioGroup,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import Header from "@/app/components/Header";
@@ -31,14 +33,15 @@ const MotorTakaful = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [openQRDialog, setOpenQRDialog] = useState(false);
   const [platePrefix, setPlatePrefix] = useState("AA");
+  const [selectedPackage, setSelectedPackage] = useState(null);
 
   const [qrValue, setQrValue] = useState("");
-  
-    useEffect(() => {
-      if (typeof window !== "undefined") {
-        setQrValue(window.origin);
-      }
-    }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setQrValue(window.origin);
+    }
+  }, []);
 
   // Translations
   const translations = {
@@ -50,18 +53,56 @@ const MotorTakaful = () => {
       agreeTerms: "I agree to the terms and conditions.",
       agreeWhatsapp: "I agree to receive updates on WhatsApp.",
       proceed: "Proceed",
-      modalTitle: "2020 - Toyota Land Cruiser",
-      policy1: "Comprehensive insurance policy text line 1",
-      policy2: "Comprehensive insurance policy text line 2",
-      policy3: "Comprehensive insurance policy text line 3",
-      policy4: "Comprehensive insurance policy text line 4",
-      policy5: "Comprehensive insurance policy text line 5",
-      policy6: "Comprehensive insurance policy text line 6",
+      selectPackage: "Select a Package",
       total: "Total",
       securePayment: "Secure Payment",
+      enterName: "Enter your name:",
+      namePlaceholder: "Enter name...",
+      qrMessage: "Scan to complete payment",
+      close: "DONE",
 
-      qrMessage: "Scan this QR code to proceed with payment",
-      close: "Close",
+      packages: [
+        {
+          name: "Silver",
+          price: "65 OMR",
+          description: "Fair prices, based on your usage and protection needs",
+          benefits: [
+            "Medical Expenses per vehicle (3 OMR)",
+            "Third party Bodily injury (0 OMR)",
+            "Third Party Property Damage (62 OMR)",
+          ],
+        },
+        {
+          name: "Gold",
+          price: "67.5 OMR",
+          description: "Fair prices, based on your usage and protection needs",
+          benefits: [
+            "Medical Expenses per vehicle (3 OMR)",
+            "Third party Bodily injury (0 OMR)",
+            "Third Party Property Damage (62 OMR)",
+            "Personal Accident Addendum (PAB) (0 OMR)",
+            "UAE Extension (0 OMR)",
+            "RSA Standard (2.5 OMR)",
+            "Orange Card (2 OMR)",
+          ],
+        },
+        {
+          name: "Platinum",
+          price: "145 OMR",
+          description: "Fair prices, based on your usage and protection needs",
+          benefits: [
+            "Personal Accident Addendum (PAB) (0 OMR)",
+            "Medical Expenses per vehicle (3 OMR)",
+            "Third party Bodily injury (0 OMR)",
+            "Third Party Property Damage (62 OMR)",
+            "Orange Card (2 OMR)",
+            "OMAN AND GCC EXTENSION (25 OMR)",
+            "Nil Excess (15 OMR)",
+            "Front Windshield damage (15 OMR)",
+            "STF Cover (25 OMR)",
+          ],
+        },
+      ],
     },
     ar: {
       title: "تكافل السيارات",
@@ -71,18 +112,56 @@ const MotorTakaful = () => {
       agreeTerms: "أوافق على الشروط والأحكام.",
       agreeWhatsapp: "أوافق على تلقي التحديثات عبر الواتساب.",
       proceed: "متابعة",
-      modalTitle: "٢٠٢٠ - تويوتا لاند كروزر",
-      policy1: "نص بوليصة التأمين الشاملة 1",
-      policy2: "نص بوليصة التأمين الشاملة 2",
-      policy3: "نص بوليصة التأمين الشاملة 3",
-      policy4: "نص بوليصة التأمين الشاملة 4",
-      policy5: "نص بوليصة التأمين الشاملة 5",
-      policy6: "نص بوليصة التأمين الشاملة 6",
+      selectPackage: "اختر باقة",
       total: "الإجمالي",
       securePayment: "دفع آمن",
+      enterName: "أدخل اسمك:",
+      namePlaceholder: "أدخل الاسم...",
+      qrMessage: "امسح لإتمام الدفع",
+      close: "تم",
 
-      qrMessage: "امسح رمز الاستجابة السريعة للمتابعة والدفع",
-      close: "إغلاق",
+      packages: [
+        {
+          name: "فضي",
+          price: "65 ريال",
+          description: "أسعار عادلة، بناءً على استخدامك واحتياجاتك للحماية",
+          benefits: [
+            "المصاريف الطبية لكل مركبة (3 ريال)",
+            "إصابة جسدية للطرف الثالث (0 ريال)",
+            "أضرار الممتلكات للطرف الثالث (62 ريال)",
+          ],
+        },
+        {
+          name: "ذهبي",
+          price: "67.5 ريال",
+          description: "أسعار عادلة، بناءً على استخدامك واحتياجاتك للحماية",
+          benefits: [
+            "المصاريف الطبية لكل مركبة (3 ريال)",
+            "إصابة جسدية للطرف الثالث (0 ريال)",
+            "أضرار الممتلكات للطرف الثالث (62 ريال)",
+            "إضافة الحوادث الشخصية (PAB) (0 ريال)",
+            "تمديد الإمارات (0 ريال)",
+            "RSA القياسي (2.5 ريال)",
+            "بطاقة برتقالية (2 ريال)",
+          ],
+        },
+        {
+          name: "بلاتيني",
+          price: "145 ريال",
+          description: "أسعار عادلة، بناءً على استخدامك واحتياجاتك للحماية",
+          benefits: [
+            "إضافة الحوادث الشخصية (PAB) (0 ريال)",
+            "المصاريف الطبية لكل مركبة (3 ريال)",
+            "إصابة جسدية للطرف الثالث (0 ريال)",
+            "أضرار الممتلكات للطرف الثالث (62 ريال)",
+            "بطاقة برتقالية (2 ريال)",
+            "تمديد عمان والخليج (25 ريال)",
+            "الخصم الصفري (15 ريال)",
+            "أضرار الزجاج الأمامي (15 ريال)",
+            "تغطية STF (25 ريال)",
+          ],
+        },
+      ],
     },
   };
 
@@ -176,10 +255,10 @@ const MotorTakaful = () => {
               padding: "8px",
               transition: "all 0.3s ease-in-out",
               "&:hover": {
-                borderColor: "#6BC24A", // Match MUI TextField hover effect
+                borderColor: "#6BC24A",
               },
               "&:focus-within": {
-                borderColor: "#6BC24A", // Same as focused text field
+                borderColor: "#6BC24A",
                 boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
               },
             }}
@@ -306,176 +385,200 @@ const MotorTakaful = () => {
         </Box>
       </Box>
 
-      {/* DIALOG */}
+      {/* Package Selection Dialog */}
       <Dialog
         open={openDialog}
         onClose={() => setOpenDialog(false)}
         fullWidth
         maxWidth="md"
-        sx={{
-          "& .MuiDialog-paper": {
-            borderRadius: 3,
-            p: 3,
-            textAlign: "center",
-            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-          },
-        }}
       >
-        <DialogContent
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            overflow: "auto",
-          }}
-        >
-          <Box sx={{ mt: "150px" }}>
-            {/* Car Image */}
+        <DialogContent sx={{ textAlign: "center", p: 4, userSelect: "none" }}>
+          {/* Car Image */}
+          <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+            <Image
+              src="/toyota.PNG"
+              alt="Toyota Land Cruiser"
+              width={300}
+              height={180}
+            />
+          </Box>
+
+          <Typography variant="h6" fontWeight="bold" sx={{ mb: 3 }}>
+            {translations[language].selectPackage}
+          </Typography>
+
+          {/* Responsive Package Layout */}
+          <RadioGroup
+            value={selectedPackage?.name || ""}
+            onChange={(event) => {
+              const selectedPkg = translations[language].packages.find(
+                (pkg) => pkg.name === event.target.value
+              );
+              setSelectedPackage(selectedPkg);
+            }}
+          >
             <Box
-              sx={{ display: "flex", justifyContent: "center", width: "100%" }}
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", md: "row" },
+                gap: 2,
+                justifyContent: "center",
+                flexWrap: "wrap",
+              }}
             >
-              <Image
-                src="/toyota.PNG"
-                alt="Toyota Land Cruiser"
-                width={300}
-                height={180}
-                style={{ maxWidth: "100%", height: "auto" }}
-              />
+              {translations[language].packages.map((pkg, index) => (
+                <Box
+                  key={index}
+                  onClick={() => setSelectedPackage(pkg)}
+                  sx={{
+                    flex: { xs: "1", md: "0 1 30%" },
+                    border:
+                      selectedPackage?.name === pkg.name
+                        ? "3px solid #6BC24A"
+                        : "2px solid #ccc",
+                    borderRadius: "12px",
+                    p: 3,
+                    textAlign: "left",
+                    backgroundColor: "#F9F9F9",
+                    transition: "0.3s",
+                    cursor: "pointer",
+                    "&:hover": { boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)" },
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 1,
+                    position: "relative",
+                  }}
+                >
+                  {/* Radio Button (Positioned in Top Right) */}
+                  <Radio
+                    value={pkg.name}
+                    checked={selectedPackage?.name === pkg.name}
+                    onChange={() => setSelectedPackage(pkg)}
+                    sx={{ position: "absolute", top: 10, right: 10 }}
+                  />
+
+                  {/* Package Name */}
+                  <Typography variant="h6" fontWeight="bold" color="primary">
+                    {pkg.name}
+                  </Typography>
+
+                  {/* Description */}
+                  <Typography
+                    variant="subtitle2"
+                    color="textSecondary"
+                    sx={{ mb: 1 }}
+                  >
+                    {pkg.description}
+                  </Typography>
+
+                  {/* Price */}
+                  <Typography variant="h6" fontWeight="bold">
+                    {pkg.price}
+                  </Typography>
+
+                  {/* Benefits List */}
+                  <Box sx={{ mt: 1 }}>
+                    {pkg.benefits.map((benefit, i) => (
+                      <Typography
+                        key={i}
+                        variant="body2"
+                        sx={{ display: "flex", alignItems: "center", mt: 2 }}
+                      >
+                        <span
+                          style={{
+                            color: "green",
+                            fontSize: "16px",
+                            marginRight: "8px",
+                          }}
+                        >
+                          ✓
+                        </span>
+                        {benefit}
+                      </Typography>
+                    ))}
+                  </Box>
+                </Box>
+              ))}
             </Box>
-            {/* Title */}
-            <Typography
-              variant="h6"
-              fontWeight="bold"
-              sx={{ my: 2, fontSize: { xs: "16px", sm: "18px", md: "20px" } }}
-            >
-              {translations[language].modalTitle}
-            </Typography>
-          </Box>
-          {/* Policy List with Table Styling */}
-          <Box
-            sx={{
-              textAlign: "left",
-              px: { xs: 1, sm: 2 },
-              borderRadius: "8px",
-              mt: 2,
-              width: "100%",
-            }}
-          >
-            {[
-              "policy1",
-              "policy2",
-              "policy3",
-              "policy4",
-              "policy5",
-              "policy6",
-            ].map((key, index) => (
-              <Box
-                key={index}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  p: { xs: 1, sm: 1.5 },
-                  borderBottom: index !== 5 ? "1px solid #000" : "none",
-                  fontSize: { xs: "14px", sm: "16px" },
-                }}
-              >
-                <Typography variant="body2">
-                  {translations[language][key]}
-                </Typography>
-                <Typography variant="body2" fontWeight="bold">
-                  {[80, 10, 5, 15, 10, 20][index]}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
+          </RadioGroup>
 
-          {/* Total Amount with Border */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              mt: 2,
-              px: { xs: 1, sm: 2 },
-              borderTop: "1px solid #000",
-              pt: 1,
-              fontSize: { xs: "14px", sm: "16px" },
-            }}
-          >
-            <Typography variant="body2" fontWeight="bold">
-              {translations[language].total}
-            </Typography>
-            <Typography variant="body2" fontWeight="bold">
-              125
-            </Typography>
-          </Box>
-
-          {/* Secure Payment Button with Card Icon */}
+          {/* Proceed to Payment Button (Only Enabled When a Package is Selected) */}
           <Button
             variant="contained"
-            onClick={handlePayment}
-            fullWidth
+            disabled={!selectedPackage}
+            onClick={() => {
+              setOpenDialog(false);
+              setOpenQRDialog(true);
+            }}
             sx={{
               mt: 3,
               borderRadius: "20px",
               fontWeight: "bold",
-              textTransform: "none",
               py: 1.5,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: { xs: "14px", sm: "16px" },
-              backgroundColor: "primary.main",
+              width: {xs:"100%",md:"40%"},
+              backgroundColor: selectedPackage ? "primary.main" : "#ccc",
               color: "#fff",
+              cursor: selectedPackage ? "pointer" : "not-allowed",
             }}
           >
-            <CreditCardIcon
-              sx={{ mr: 1, fontSize: { xs: "20px", sm: "24px" } }}
-            />
             {translations[language].securePayment}
           </Button>
         </DialogContent>
       </Dialog>
+
       {/* QR Code Dialog */}
       <Dialog open={openQRDialog} onClose={() => setOpenQRDialog(false)}>
-        <DialogTitle
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            textAlign: "center",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="body1">
-            {translations[language].qrMessage}
-          </Typography>
-        </DialogTitle>
         <DialogContent
           sx={{
+            textAlign: "center",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            pb: 3,
+            p: 4,
+            minWidth: { xs: "90%", sm: "400px" },
           }}
         >
-          <QRCodeCanvas value={qrValue} size={250} />
+          {/* Enter Name Section */}
+          <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+            {translations[language].enterName}
+          </Typography>
+          <TextField
+            placeholder={translations[language].namePlaceholder}
+            fullWidth
+            sx={{
+              mb: 3,
+              "& .MuiInputBase-root": {
+                borderRadius: "8px",
+                backgroundColor: "rgba(0, 0, 0, 0.05)",
+                "& input": { textAlign: "center" },
+              },
+            }}
+          />
+
+          {/* QR Code Section */}
+          <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+            {translations[language].qrMessage}
+          </Typography>
+          <QRCodeCanvas
+            value={qrValue}
+            size={200}
+            style={{ marginBottom: "20px" }}
+          />
+
+          {/* Done Button */}
           <Button
+            fullWidth
+            variant="contained"
+            onClick={() => router.push("/")}
             sx={{
               mt: 3,
-              backgroundColor: "primary.main",
-              color: "#fff",
+              borderRadius: "8px",
               fontWeight: "bold",
               textTransform: "none",
-              borderRadius: "8px",
-              "&:hover": { backgroundColor: "#A4C754" },
+              py: 1.5,
+              backgroundColor: "#A4C754",
+              "&:hover": { backgroundColor: "#88A34D" },
             }}
-            onClick={() => router.push("/")}
           >
             {translations[language].close}
           </Button>

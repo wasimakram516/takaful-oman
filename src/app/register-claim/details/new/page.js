@@ -25,6 +25,7 @@ import { useLanguage } from "@/app/contexts/LanguageContext";
 import Image from "next/image";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { QRCodeCanvas } from "qrcode.react";
+import LocationPicker from "@/app/components/LocationPicker";
 
 export default function SubmitClaim() {
   const router = useRouter();
@@ -33,6 +34,10 @@ export default function SubmitClaim() {
   const [openQRDialog, setOpenQRDialog] = useState(false);
   const [platePrefix, setPlatePrefix] = useState("AA");
   const [qrValue, setQrValue] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [selectedLocationDropdown, setSelectedLocationDropdown] = useState("");
+  const [selectedGarage, setSelectedGarage] = useState("");
+  const [openUploadDialog, setOpenUploadDialog] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -75,6 +80,27 @@ export default function SubmitClaim() {
       plateNumber: "Your car plate number...",
       repairArea: "Preferred Repair Area",
       locationGarage: "Garage",
+      location: "Location",
+      locationPlaceholder: "Select a location...",
+      locations: [
+        "Adam",
+        "Al Amarat",
+        "Al Buraimi",
+        "Al Hamra",
+        "Al Jazer",
+        "Al Kamil Wal Wafi",
+        "Al Khaburah",
+      ],
+      garage: "Garage",
+      garagePlaceholder: "Select a garage...",
+      garages: [
+        "Al Darwashi Auto",
+        "M/S. Arabian Car Marketing Co LLC",
+        "M/S. Reliable International Automotive LLC",
+        "Madina Muscat",
+        "MAS German United LLC (Munich Motors)",
+      ],
+
       towing: "Do you need towing?",
       mulkiyaFront: "Mulkiya (Front)",
       mulkiyaBack: "Mulkiya (Back)",
@@ -121,6 +147,28 @@ export default function SubmitClaim() {
       plateNumber: "رقم لوحة السيارة...",
       repairArea: "منطقة الإصلاح المفضلة",
       locationGarage: "الورشة",
+
+      location: "الموقع",
+      locationPlaceholder: "اختر موقعًا...",
+      locations: [
+        "آدم",
+        "العامرات",
+        "البريمي",
+        "الحمراء",
+        "الجزر",
+        "الكامل والوافي",
+        "الخضراء",
+      ],
+      garage: "الورشة",
+      garagePlaceholder: "اختر ورشة...",
+      garages: [
+        "الداروشي أوتو",
+        "شركة التسويق العربية للسيارات ذ.م.م",
+        "شركة السيارات الدولية الموثوقة ذ.م.م",
+        "مدينة مسقط",
+        "شركة MAS الألمانية المتحدة (ميونيخ موتورز)",
+      ],
+
       towing: "هل تحتاج إلى سحب؟",
       mulkiyaFront: "ملكية السيارة (الأمامية)",
       mulkiyaBack: "ملكية السيارة (الخلفية)",
@@ -430,14 +478,9 @@ export default function SubmitClaim() {
                   />
                 </Box>
                 <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
-                  <Typography fontWeight="bold" fontSize="14px">
-                    {translations[language].location}
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    placeholder="📍"
-                    size="small"
-                    sx={{ backgroundColor: "#fff" }}
+                  <LocationPicker
+                    selectedLocation={selectedLocation}
+                    setSelectedLocation={setSelectedLocation}
                   />
                 </Box>
               </Box>
@@ -614,7 +657,7 @@ export default function SubmitClaim() {
               </Typography>
 
               <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
-                {/* Location Field */}
+                {/* Location Dropdown */}
                 <Box
                   sx={{
                     display: "flex",
@@ -626,14 +669,30 @@ export default function SubmitClaim() {
                   <Typography variant="subtitle2" fontWeight="bold">
                     {translations[language].location}
                   </Typography>
-                  <TextField
-                    fullWidth
-                    placeholder={translations[language].locationPlaceholder}
-                    sx={{ backgroundColor: "#fff" }}
-                  />
+                  <FormControl fullWidth>
+                    <Select
+                      value={selectedLocationDropdown || ""}
+                      onChange={(e) =>
+                        setSelectedLocationDropdown(e.target.value)
+                      }
+                      displayEmpty
+                      sx={{ backgroundColor: "#fff" }}
+                    >
+                      <MenuItem value="" disabled>
+                        {translations[language].locationPlaceholder}
+                      </MenuItem>
+                      {translations[language].locations.map(
+                        (location, index) => (
+                          <MenuItem key={index} value={location}>
+                            {location}
+                          </MenuItem>
+                        )
+                      )}
+                    </Select>
+                  </FormControl>
                 </Box>
 
-                {/* Garage Field */}
+                {/* Garage Dropdown */}
                 <Box
                   sx={{
                     display: "flex",
@@ -645,11 +704,23 @@ export default function SubmitClaim() {
                   <Typography variant="subtitle2" fontWeight="bold">
                     {translations[language].garage}
                   </Typography>
-                  <TextField
-                    fullWidth
-                    placeholder={translations[language].garagePlaceholder}
-                    sx={{ backgroundColor: "#fff" }}
-                  />
+                  <FormControl fullWidth>
+                    <Select
+                      value={selectedGarage}
+                      onChange={(e) => setSelectedGarage(e.target.value)}
+                      displayEmpty
+                      sx={{ backgroundColor: "#fff" }}
+                    >
+                      <MenuItem value="">
+                        {translations[language].garagePlaceholder}
+                      </MenuItem>
+                      {translations[language].garages.map((garage, index) => (
+                        <MenuItem key={index} value={garage}>
+                          {garage}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Box>
               </Box>
 
@@ -762,7 +833,7 @@ export default function SubmitClaim() {
                   gap: 2,
                 }}
               >
-                {/* Mulkiya Reference Image + Upload Inputs */}
+                {/* Mulkiya Reference Image + Upload Button */}
                 <Box
                   sx={{
                     display: "flex",
@@ -789,52 +860,24 @@ export default function SubmitClaim() {
                     <Typography variant="body2" fontWeight="bold" color="error">
                       {translations[language].mulkiyaFront}
                     </Typography>
-                    <input
-                      type="file"
-                      ref={mulkiyaFrontRef}
-                      onChange={(e) => handleFileUpload(e, "mulkiyaFront")}
-                      style={{ display: "none" }}
-                    />
                     <Button
                       variant="outlined"
-                      onClick={() => mulkiyaFrontRef.current.click()}
+                      onClick={() => setOpenUploadDialog(true)}
                       sx={{ textTransform: "none" }}
                     >
                       {translations[language].upload}
                     </Button>
-                    {uploadedImages.mulkiyaFront && (
-                      <Typography
-                        variant="body2"
-                        sx={{ color: "#4CAF50", mt: 1 }}
-                      >
-                        {uploadedImages.mulkiyaFront}
-                      </Typography>
-                    )}
 
                     <Typography variant="body2" fontWeight="bold" color="error">
                       {translations[language].mulkiyaBack}
                     </Typography>
-                    <input
-                      type="file"
-                      ref={mulkiyaBackRef}
-                      onChange={(e) => handleFileUpload(e, "mulkiyaBack")}
-                      style={{ display: "none" }}
-                    />
                     <Button
                       variant="outlined"
-                      onClick={() => mulkiyaBackRef.current.click()}
+                      onClick={() => setOpenUploadDialog(true)}
                       sx={{ textTransform: "none" }}
                     >
                       {translations[language].upload}
                     </Button>
-                    {uploadedImages.mulkiyaBack && (
-                      <Typography
-                        variant="body2"
-                        sx={{ color: "#4CAF50", mt: 1 }}
-                      >
-                        {uploadedImages.mulkiyaBack}
-                      </Typography>
-                    )}
                   </Box>
                 </Box>
               </Box>
@@ -858,7 +901,7 @@ export default function SubmitClaim() {
                   gap: 2,
                 }}
               >
-                {/* License Reference Image + Upload Inputs */}
+                {/* License Reference Image + Upload Button */}
                 <Box
                   sx={{
                     display: "flex",
@@ -885,52 +928,24 @@ export default function SubmitClaim() {
                     <Typography variant="body2" fontWeight="bold" color="error">
                       {translations[language].licenseFront}
                     </Typography>
-                    <input
-                      type="file"
-                      ref={licenseFrontRef}
-                      onChange={(e) => handleFileUpload(e, "licenseFront")}
-                      style={{ display: "none" }}
-                    />
                     <Button
                       variant="outlined"
-                      onClick={() => licenseFrontRef.current.click()}
+                      onClick={() => setOpenUploadDialog(true)}
                       sx={{ textTransform: "none" }}
                     >
                       {translations[language].upload}
                     </Button>
-                    {uploadedImages.licenseFront && (
-                      <Typography
-                        variant="body2"
-                        sx={{ color: "#4CAF50", mt: 1 }}
-                      >
-                        {uploadedImages.licenseFront}
-                      </Typography>
-                    )}
 
                     <Typography variant="body2" fontWeight="bold" color="error">
                       {translations[language].licenseBack}
                     </Typography>
-                    <input
-                      type="file"
-                      ref={licenseBackRef}
-                      onChange={(e) => handleFileUpload(e, "licenseBack")}
-                      style={{ display: "none" }}
-                    />
                     <Button
                       variant="outlined"
-                      onClick={() => licenseBackRef.current.click()}
+                      onClick={() => setOpenUploadDialog(true)}
                       sx={{ textTransform: "none" }}
                     >
                       {translations[language].upload}
                     </Button>
-                    {uploadedImages.licenseBack && (
-                      <Typography
-                        variant="body2"
-                        sx={{ color: "#4CAF50", mt: 1 }}
-                      >
-                        {uploadedImages.licenseBack}
-                      </Typography>
-                    )}
                   </Box>
                 </Box>
               </Box>
@@ -952,43 +967,36 @@ export default function SubmitClaim() {
                 {translations[language].finalize}
               </Button>
 
-              {/* QR Code Dialog */}
+              {/* Upload Info Dialog */}
               <Dialog
-                open={openQRDialog}
-                onClose={() => setOpenQRDialog(false)}
+                open={openUploadDialog}
+                onClose={() => setOpenUploadDialog(false)}
               >
-                <DialogTitle
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    textAlign: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography variant="body1">
-                    {translations[language].qrMessage}
-                  </Typography>
-                </DialogTitle>
                 <DialogContent
                   sx={{
                     display: "flex",
                     flexDirection: "column",
-                    alignItems: "center",
-                    pb: 3,
+                    textAlign: "center",
+                    p: 3,
                   }}
                 >
-                  <QRCodeCanvas value={qrValue} size={250} />
+                  <Image
+                    src="/image-upload-hand.PNG"
+                    width={350}
+                    height={350}
+                    alt="Upload Guide"
+                  />
                   <Button
+                    onClick={() => setOpenUploadDialog(false)}
                     sx={{
-                      mt: 3,
-                      backgroundColor: "primary.main",
+                      mt: 2,
+                      backgroundColor: "#BFD85F",
                       color: "#fff",
                       fontWeight: "bold",
                       textTransform: "none",
                       borderRadius: "8px",
                       "&:hover": { backgroundColor: "#A4C754" },
                     }}
-                    onClick={() => router.push("/")}
                   >
                     {translations[language].close}
                   </Button>

@@ -17,6 +17,21 @@ const theme = createTheme({
     },
     body1: {
       fontFamily: "Nunito, sans-serif",
+      fontSize: "1rem",
+      fontWeight: 400,
+    },
+    body2: {
+      fontFamily: "Nunito, sans-serif",
+      fontSize: "0.875rem",
+    },
+    subtitle1: {
+      fontFamily: "Nunito, sans-serif",
+      fontSize: "1rem",
+      fontWeight: 400,
+    },
+    subtitle2: {
+      fontFamily: "Nunito, sans-serif",
+      fontSize: "0.8rem",
       fontWeight: 400,
     },
   },
