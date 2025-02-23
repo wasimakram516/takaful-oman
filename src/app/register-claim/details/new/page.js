@@ -978,6 +978,7 @@ export default function SubmitClaim() {
                     flexDirection: "column",
                     textAlign: "center",
                     p: 3,
+                    overflow:"hidden"
                   }}
                 >
                   <Image
@@ -985,6 +986,7 @@ export default function SubmitClaim() {
                     width={350}
                     height={350}
                     alt="Upload Guide"
+                    unoptimized
                   />
                   <Button
                     onClick={() => setOpenUploadDialog(false)}
