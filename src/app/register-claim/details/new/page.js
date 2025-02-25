@@ -72,6 +72,8 @@ export default function SubmitClaim() {
       garagePlaceholder: "Workshop name...",
       yes: "Yes",
       no: "No",
+      enterName: "Enter your name:",
+      namePlaceholder: "Enter name...",
       location: "Location",
       cause: "Cause of Accident?",
       accidentSketch: "Accident Sketch",
@@ -139,6 +141,8 @@ export default function SubmitClaim() {
       garagePlaceholder: "اسم الورشة...",
       yes: "نعم",
       no: "لا",
+      enterName: "أدخل اسمك:",
+      namePlaceholder: "أدخل الاسم...",
       location: "الموقع",
       cause: "سبب الحادث؟",
       accidentSketch: "رسم الحادث",
@@ -1004,6 +1008,64 @@ export default function SubmitClaim() {
                   </Button>
                 </DialogContent>
               </Dialog>
+              {/* QR Code Dialog */}
+      <Dialog open={openQRDialog} onClose={() => setOpenQRDialog(false)}>
+        <DialogContent
+          sx={{
+            textAlign: "center",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            p: 4,
+            minWidth: { xs: "90%", sm: "400px" },
+          }}
+        >
+          {/* Enter Name Section */}
+          <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+            {translations[language].enterName}
+          </Typography>
+          <TextField
+            placeholder={translations[language].namePlaceholder}
+            fullWidth
+            sx={{
+              mb: 3,
+              "& .MuiInputBase-root": {
+                borderRadius: "8px",
+                backgroundColor: "rgba(0, 0, 0, 0.05)",
+                "& input": { textAlign: "center" },
+              },
+            }}
+          />
+
+          {/* QR Code Section */}
+          <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+            {translations[language].qrMessage}
+          </Typography>
+          <QRCodeCanvas
+            value={qrValue}
+            size={200}
+            style={{ marginBottom: "20px" }}
+          />
+
+          {/* Done Button */}
+          <Button
+            fullWidth
+            variant="contained"
+            onClick={() => router.push("/")}
+            sx={{
+              mt: 3,
+              borderRadius: "8px",
+              fontWeight: "bold",
+              textTransform: "none",
+              py: 1.5,
+              backgroundColor: "#A4C754",
+              "&:hover": { backgroundColor: "#88A34D" },
+            }}
+          >
+            {translations[language].close}
+          </Button>
+        </DialogContent>
+      </Dialog>
             </>
           )}
         </Box>
